@@ -31,8 +31,6 @@ def auto_send_email(to_address, subject, content, from_address, if_add_time=True
         server.starttls()
         username = os.getenv("email_name")
         password = os.getenv("email_pwd")
-        print(username)
-        print(password)
         server.login(username, password)
         server.sendmail(from_address, to_address, msg.as_string())
         server.quit()

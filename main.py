@@ -12,13 +12,56 @@ import datetime
 import os
 from common.utils import EmailUtils
 
+symbol = 'BTC/USDT'  # 交易品种
+base_coin = symbol.split('/')[-1]
+trade_coin = symbol.split('/')[0]
+# =====参数
+time_interval = '15m'  # 间隔运行时间，不能低于5min
 
 def get_timestamp():
     now = datetime.datetime.now()
     t = now.isoformat("T", "milliseconds")
     return t + "Z"
 
+
 time = get_timestamp()
+
+"""
+获取账户资产信息 现获取的是资金账户和现货账户资产
+"""
+def updateAccountInf():
+    accountAPI = account.AccountAPI(api_key, secret_key, passphrase, False)
+    spotAPI = spot.SpotAPI(api_key, secret_key, passphrase, False)
+    print("当前资金账户资产:\r\n")
+    if (len(accountAPI.get_currency(
+            base_coin)) != 0):
+        print(base_coin, accountAPI.get_currency(
+        base_coin)[0].get("balance"), "\r\n")
+    else:
+        print(base_coin, 0)
+    if (len(accountAPI.get_currency(
+            trade_coin)) != 0):
+        print(trade_coin, accountAPI.get_currency(
+        trade_coin)[0].get("balance"))
+    else:
+        print(trade_coin, 0)
+    print("当前现货账户资产:\r\n", base_coin, spotAPI.get_coin_account_info(
+        base_coin), "\r\n", trade_coin, spotAPI.get_coin_account_info(
+        trade_coin))
+    if (len(spotAPI.get_coin_account_info(
+            base_coin)) != 0):
+        print(base_coin, spotAPI.get_coin_account_info(
+        base_coin).get("balance"), "\r\n")
+    else:
+        print(base_coin, 0)
+    if (len(spotAPI.get_coin_account_info(
+            trade_coin)) != 0):
+        print(trade_coin, spotAPI.get_coin_account_info(
+        trade_coin).get("balance"))
+    else:
+        print(trade_coin, 0)
+
+
 
 if __name__ == '__main__':
     # 需配置环境变量
@@ -27,9 +70,9 @@ if __name__ == '__main__':
     passphrase = os.getenv("passphrase")
     # param use_server_time's value is False if is True will use server timestamp
     # param test's value is False if is True will use simulative trading
-
-# account api test
-# 资金账户API
+    updateAccountInf()
+    # account api test
+    # 资金账户API
     accountAPI = account.AccountAPI(api_key, secret_key, passphrase, False)
     # 资金账户信息
     # result = accountAPI.get_wallet()
@@ -60,8 +103,8 @@ if __name__ == '__main__':
     # 提币手续费
     # result = accountAPI.get_coin_fee('')
 
-# spot api test
-# 币币API
+    # spot api test
+    # 币币API
     spotAPI = spot.SpotAPI(api_key, secret_key, passphrase, False)
     # 币币账户信息
     # result = spotAPI.get_account_info()
@@ -114,8 +157,8 @@ if __name__ == '__main__':
     # 公共-获取历史K线数据
     # result = spotAPI.get_history_kline(instrument_id='', start='', end='', granularity='')
 
-# level api test
-# 币币杠杆API
+    # level api test
+    # 币币杠杆API
     levelAPI = lever.LeverAPI(api_key, secret_key, passphrase, False)
     # 币币杠杆账户信息
     # result = levelAPI.get_account_info()
@@ -164,8 +207,8 @@ if __name__ == '__main__':
     # 公共-获取标记价格
     # result = levelAPI.get_mark_price('')
 
-# future api test
-# 交割合约API
+    # future api test
+    # 交割合约API
     futureAPI = future.FutureAPI(api_key, secret_key, passphrase, False)
     # 所有合约持仓信息
     # result = futureAPI.get_position()
@@ -259,8 +302,8 @@ if __name__ == '__main__':
     # 公共-获取历史K线数据
     # result = futureAPI.get_history_kline(instrument_id='', start='', end='', granularity='')
 
-# swap api test
-# 永续合约API
+    # swap api test
+    # 永续合约API
     swapAPI = swap.SwapAPI(api_key, secret_key, passphrase, False)
     # 所有合约持仓信息
     # result = swapAPI.get_position()
@@ -345,8 +388,8 @@ if __name__ == '__main__':
     # 公共-获取历史K线数据
     # result = swapAPI.get_history_kline(instrument_id='', start='', end='', granularity='')
 
-# option api test
-# 期权合约API
+    # option api test
+    # 期权合约API
     optionAPI = option.OptionAPI(api_key, secret_key, passphrase, False)
     # 单个标的指数持仓信息
     # result = optionAPI.get_specific_position(underlying='', instrument_id='')
@@ -399,8 +442,8 @@ if __name__ == '__main__':
     # 公共-获取历史结算/行权记录
     # result = optionAPI.get_history_settlement(instrument_id='', start='', end='', limit='')
 
-# information api test
-# 合约交易数据API
+    # information api test
+    # 合约交易数据API
     informationAPI = information.InformationAPI(api_key, secret_key, passphrase, False)
     # 公共-多空持仓人数比
     # result = informationAPI.get_long_short_ratio(currency='', start='', end='', granularity='')
@@ -413,17 +456,16 @@ if __name__ == '__main__':
     # 公共-多空精英平均持仓比例
     # result = informationAPI.get_margin(currency='', start='', end='', granularity='')
 
-# index api test
-# 指数API
+    # index api test
+    # 指数API
     indexAPI = index.IndexAPI(api_key, secret_key, passphrase, False)
     # 公共-获取指数成分
     # result = indexAPI.get_index_constituents('')
 
-# system api test
-# 获取系统升级状态
+    # system api test
+    # 获取系统升级状态
     system = system.SystemAPI(api_key, secret_key, passphrase, False)
     # 公共-获取系统升级状态
     # result = system.get_system_status('')
-
 
     print(time + json.dumps(result))
