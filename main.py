@@ -1,5 +1,3 @@
-import os
-
 import okex.account_api as account
 import okex.futures_api as future
 import okex.lever_api as lever
@@ -11,6 +9,9 @@ import okex.system_api as system
 import okex.information_api as information
 import json
 import datetime
+import os
+from common.utils import EmailUtils
+
 
 def get_timestamp():
     now = datetime.datetime.now()
@@ -20,12 +21,10 @@ def get_timestamp():
 time = get_timestamp()
 
 if __name__ == '__main__':
-
     # 需配置环境变量
     api_key = os.getenv("api_key")
     secret_key = os.getenv("secret_key")
     passphrase = os.getenv("passphrase")
-
     # param use_server_time's value is False if is True will use server timestamp
     # param test's value is False if is True will use simulative trading
 
