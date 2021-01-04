@@ -24,7 +24,11 @@ pip install websockets==6.0
 api_key = ""
 secret_key = ""
 passphrase = ""
+email_name = ""
+email_pwd = ""
 ```
+
+2.3 将各类信息放在环境变量中调用,发送邮件需开通qq smtp服务配置的密码
 #### 第三步：调用接口
 
 * RestAPI
